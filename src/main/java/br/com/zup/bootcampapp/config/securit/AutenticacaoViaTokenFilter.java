@@ -23,9 +23,12 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
+            throws ServletException, IOException {
+
         String token = recuperarToken(httpServletRequest);
         boolean valido = tokenService.isTokenValido(token);
+        System.out.println("Passou por aqui");
         if (valido) {
             autenticarAluno(token);
         }

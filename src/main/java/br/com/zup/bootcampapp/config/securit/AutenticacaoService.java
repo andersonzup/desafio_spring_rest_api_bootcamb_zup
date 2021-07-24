@@ -19,10 +19,9 @@ public class AutenticacaoService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<AlunoLoguin> aluno = LoguinRepository.findByEmail(email);
-        System.out.println(aluno);
-        if (aluno.isPresent()) {
-            return aluno.get();
+        AlunoLoguin aluno = LoguinRepository.findByEmail(email);
+        if (aluno.getEmail() != null) {
+            return aluno;
         }
 
         throw new UsernameNotFoundException("Dados inválidos!");

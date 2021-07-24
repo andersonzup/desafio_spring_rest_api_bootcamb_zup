@@ -4,6 +4,7 @@ import br.com.zup.bootcampapp.repository.AlunoLoguinRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @EnableWebSecurity
 @Configuration
+@Profile(value = {"prod", "test"})
 public class SecuritConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -42,8 +44,9 @@ public class SecuritConfiguration extends WebSecurityConfigurerAdapter {
     @Override//Configuracoes de autorizacao
     protected void configure(HttpSecurity http) throws Exception {
        http.authorizeRequests()
-               .antMatchers(HttpMethod.GET, "/listaDeAlunos/**").permitAll()
+               .antMatchers(HttpMethod.GET, "/api/v1/bootcamp/listaDeAlunos/**").permitAll()
                .antMatchers(HttpMethod.POST, "/auth").permitAll()
+               .antMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
                 .anyRequest().authenticated().
                and().csrf().disable()
                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

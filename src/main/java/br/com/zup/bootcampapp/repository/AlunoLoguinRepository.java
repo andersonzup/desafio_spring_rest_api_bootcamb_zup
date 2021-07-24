@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface AlunoLoguinRepository extends JpaRepository<AlunoLoguin, Long> {
 
-    Optional<AlunoLoguin> findByEmail(String email);
+    AlunoLoguin findByEmail(String email);
 }

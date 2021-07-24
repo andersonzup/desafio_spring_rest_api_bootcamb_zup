@@ -12,7 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/bootcamp")
@@ -57,6 +60,19 @@ public class BootCampController {
     public Page<AlunoDto> listarAlunos(Pageable paginacao){
         Page<Aluno> alunos = alunoRepository.findAll(paginacao);
         return AlunoDto.convertToDto(alunos);
+    }
+
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    @CacheEvict(value = "listaDeAlunos", allEntries = true)
+    public ResponseEntity<?> remover(@PathVariable Long id){
+        Optional<Aluno> aluno = alunoRepository.findById(id);
+        if (aluno.isPresent()){
+            alunoRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     private MessageResponseDto createdMessageResponse(String s, Long id) {
